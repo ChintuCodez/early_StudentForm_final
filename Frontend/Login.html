@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Form</title>
+    <style>
+        table {
+          border-collapse: collapse;
+          width: 40%;
+          margin: 2px auto;
+          margin-bottom: 40px;
+        }
+        th, td {
+          border: 1px solid black;
+          padding: 5px;
+          text-align: center;
+        }
+        th {
+          background-color: #f2f2f2;
+        }
+        .delete-btn {
+          background-color: red;
+          color: white;
+          border: none;
+          padding: 5px 10px;
+          cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <center><h1>STUDENT FORM</h1></center>
+
+    <center>
+    <div id="form">
+        <form onsubmit="addStudent(event)">
+            <table>
+                <tr>
+                    <td><label for="name">Name:</label></td>
+                    <td><input type="text" id="name" name="name" required></td>
+                </tr>
+                <tr>
+                    <td><label for="age">Age:</label></td>
+                    <td><input type="number" id="age" name="age" required></td>
+                </tr>
+                <tr>
+                    <td><label for="course">Course:</label></td>
+                    <td>
+                        <select name="course" id="course" required>
+                            <option value="">Select Course</option>
+                            <option value="cse">CSE</option>
+                            <option value="ece">ECE</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button type="submit" id="submit-btn">Submit</button></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    </center>
+
+    <table id="student-table">
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Course</th>
+            <th>Action</th>
+        </tr>
+        
+    </table>
+
+    <script>
+       const table = document.getElementById("student-table");
+
+       function addStudent(event) {
+           event.preventDefault(); 
+
+           let name = document.getElementById("name").value.trim();
+           let age = document.getElementById("age").value.trim();
+           let course = document.getElementById("course").value;
+
+
+           if (name == "" || age == "" || course == "") {
+               alert("fill all fields");
+               return;
+           }
+
+           fetch("http://localhost:5000/login", {
+                method: "POST",
+                headers: {
+                     "Content-Type": 'application/json'
+                },
+                body: JSON.stringify({name: name, age: age, course: course})
+            
+            })
+            .then((res) => res.json())
+            .then (data => {
+                alert(data.message);
+                document.querySelector("form").reset();
+            })
+
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while submitting the form.");
+            });
+           }
+    </script>
+</body>
+</html>
